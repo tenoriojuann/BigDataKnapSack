@@ -13,19 +13,22 @@ int max(int a, int b) { return (a > b) ? a : b;}
 
 int main() {
 
-	system("generator.exe 5000 1454893");
-
+	if (!ifstream("data.txt")) {
+		system("generator.exe 50 893");
+	}
 
 	std::ifstream infile("data.txt");
 
 
 	int items, capacity;
 	int a, b;
-	infile >> items;
 	infile >> capacity;
-	int *s = new int[capacity + 1];
+	infile >> items;
+
+	int s[51];
 
 	vector<vector<int> > bag(items + 1, vector<int>(capacity + 1, 0));
+
 
 	while (infile >> a >> b)
 	{
@@ -40,12 +43,11 @@ int main() {
 				// A case for weight[i] < jw
 				else {
 					bag[i][jw] = max(bag[i - 1][jw], b + bag[i - 1][jw - a]);
-					s[jw] = i;
+					s[jw] =  i;
 				}
 			}
 		}
 	}
-
 	cout << bag[items][capacity];
 
 
