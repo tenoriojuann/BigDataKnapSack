@@ -6,17 +6,20 @@
 
 using namespace std;
 
-// A utility function that returns maximum of two integers
-int max(int a, int b) { return (a > b) ? a : b;}
 
-int knapsack(int items, int capacity, int s[], int weight[], int value[]) {
+int MAX(int a, int b) { return (a > b) ? a : b; }
+
+int knapsack(int W, int weight[], int value[], int n, vector<vector<int>> &m)
+{
+
+	/* m[i][w] to be the maximum value that can be attained
+	with weight less than or equal to w using items up to i*/
 
 
-	vector<vector<int> > m(items + 1, vector<int>(capacity + 1, 0));
-	for (int jw = 0; jw <= capacity; jw++) m[0][jw] = 0;
+	for (int jw = 0; jw <= W; jw++) m[0][jw] = 0;
 
-	for (int i = 1; i <= items; i++) {
-		for (int jw = 0; jw <= capacity; jw++) {
+	for (int i = 1; i <= n; i++) {
+		for (int jw = 1; jw <= W; jw++) {
 
 			// A case when the new item is more than the current weight limit
 			if (weight[i - 1] > jw)
@@ -24,69 +27,65 @@ int knapsack(int items, int capacity, int s[], int weight[], int value[]) {
 
 			// A case for weight[i] < jw
 			else {
-				m[i][jw] = max(m[i - 1][jw], value[i - 1] + m[i - 1][jw - weight[i - 1]]);
-				s[jw] = i;
+				m[i][jw] = MAX(m[i - 1][jw], value[i - 1] + m[i - 1][jw - weight[i - 1]]);
 			}
 		}
 	}
-
-
-	return m[items][capacity];
+	return m[n][W];
 }
-
-// Returns the maximum value that can be put in a knapsack of capacity W
-
-
 int main() {
 
 	if (!ifstream("data.txt")) {
-		system("generator.exe 50 50");
+		system("generator.exe 50 155");
 	}
 
-	std::ifstream infile("data.txt");
+	std::ifstream infile("data.txt", std::ios_base::in);
+
 
 
 	int items, capacity;
-	int a[10];
-	int b[10];
-	infile >> capacity;
+	
+
 	infile >> items;
+	infile >> capacity;
 
-	int *s = new int[capacity+1];
+	cout << "items: " << items << " capacity: " << capacity << endl;
 
-	vector<vector<int> > MaxValues(50, vector<int>(50,0));
+
+	int *weights = new int[items];
+	int *values = new int[items];
 
 
 	int counter = 0;
-	int n = 1;
-	int k = capacity;
-	int position = 0;
+	while (infile >>weights[counter]>>values[counter])	{
+		counter++;
+	}
 
-	while (infile >> a[counter] && infile >> b[counter])	 // make sure it imports   the numbers into the program
-	{
-		
+	vector<vector<int> > m(items + 1, vector<int>(capacity + 1, 0));  	// m[n+1][W+1]
 
 
+	cout << "Max value: " << (knapsack( capacity, weights, values, items, m)) << endl;
 
-		if (counter == 9) {
-			counter = 0;													  
-			MaxValues[0][position] = ( knapsack(10, capacity, s, a, b) );
-			k = capacity;
-			n = 1;
-			while (k) {
-				cout << a[s[k] - 1] << " ";
-				k = k - a[s[k] - 1];
-			}
+
+
+	int i = items;
+	int W = capacity;
+	while (W>0 && i>1) {
+		if (m[i][W] != m[i - 1][W]) {
+			cout << "Weights: " <<  weights[i-1] << " " << endl;
+			i--;
+			W = W - weights[i];
 
 			
 		}
-
-		position++;
-		counter++;
-		
+		else {
+			i--;
+		}
 	}
 
-	std::cout << "Press Enter to Quit";
+
+	int exit;
+	std::cin >> exit;
 
 
 
