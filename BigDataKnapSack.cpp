@@ -36,7 +36,7 @@ int knapsack(int W, int weight[], int value[], int n, vector<vector<int>> &m)
 int main() {
 
 	if (!ifstream("data.txt")) {
-		system("generator.exe 50 155");
+		system("generator.exe 10000 100000");
 	}
 
 	std::ifstream infile("data.txt", std::ios_base::in);
@@ -46,7 +46,8 @@ int main() {
 	int items, capacity;
 	
 
-	infile >> items;
+	infile >> items; 
+	items = 10000;
 	infile >> capacity;
 
 	cout << "items: " << items << " capacity: " << capacity << endl;
@@ -57,11 +58,11 @@ int main() {
 
 
 	int counter = 0;
-	while (infile >>weights[counter]>>values[counter])	{
+	while (infile >>weights[counter]>>values[counter] && counter < items)	{
 		counter++;
 	}
 
-	vector<vector<int> > m(items + 1, vector<int>(capacity + 1, 0));  	// m[n+1][W+1]
+	vector<vector<int> > m (vector<vector<int>>(items+1, *new vector<int>(capacity + 1, 0)));  	// m[n+1][W+1]
 
 
 	cout << "Max value: " << (knapsack( capacity, weights, values, items, m)) << endl;
@@ -70,12 +71,15 @@ int main() {
 
 	int i = items;
 	int W = capacity;
+	int num = 0;
+
+	cout << "Weights: " << endl;
 	while (W>0 && i>1) {
 		if (m[i][W] != m[i - 1][W]) {
-			cout << "Weights: " <<  weights[i-1] << " " << endl;
+			cout <<  weights[i-1] << " " << endl;
 			i--;
 			W = W - weights[i];
-
+			num++;
 			
 		}
 		else {
@@ -83,6 +87,7 @@ int main() {
 		}
 	}
 
+	cout << "Number of items: " << num;
 
 	int exit;
 	std::cin >> exit;
