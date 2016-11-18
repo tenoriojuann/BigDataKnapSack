@@ -45,9 +45,9 @@ int main() {
 	int items, capacity;
 	
 
-	infile >> n; 
-	items = 5000;
-	infile >> capacity;
+	infile >> n;   // total number of items in the txt file
+	items = 5000;  // we will contemplate 5,000 digits at a time
+	infile >> capacity;	// capacity of the bag
 
 	std::cout << "items: " << n << " capacity: " << capacity << std::endl;
 
@@ -58,6 +58,10 @@ int main() {
 	int READ=0;
 
 	int MAX_VALUE =0;
+
+	// Dynamic arrays to hold the weights and values
+	// This was better, since we can use heap memory
+	// which holds more memory than stack
 
 	int *weights1 = new int[items];
 	int *weights2 = new int[items];
@@ -73,8 +77,12 @@ int main() {
 
 	int tmp = 0;
 
+	// pointer vector<vecotr<int>> to point to either table (m,m2)
+	// we start with pointing it to the second table
+
 	std::vector<std::vector<int> > *tmpvector = &m2;
 	int *tmpweights = weights1;
+
 
 
 	while (READ < (n/items)) {
@@ -84,7 +92,7 @@ int main() {
 		if (tmpvector == &m2) {
 
 
-			while (counter < items) {  
+			while (counter < items) {  	 // inputting the 5000 items into the weights and values array.
 
 
 				infile >> weights1[counter] >> values1[counter];
@@ -140,6 +148,9 @@ int main() {
 	int num = 0;
 
 	std::cout << "MAX Value: " << MAX_VALUE<< std::endl;
+
+
+	// Printing the weights
 
 		std::cout << "Weights: " << std::endl;
 		while (W > 0) {
