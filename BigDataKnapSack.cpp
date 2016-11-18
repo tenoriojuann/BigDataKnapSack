@@ -4,12 +4,11 @@
 #include <vector>
 #include <map>
 
-using namespace std;
 
 
 int MAX(int a, int b) { return (a > b) ? a : b; }
 
-int knapsack(int W, int weight[], int value[], int n, vector<vector<int>> &m)
+int knapsack(int W, int weight[], int value[], int n, std::vector<std::vector<int>> &m)
 {
 
 	/* m[i][w] to be the maximum value that can be attained
@@ -35,59 +34,149 @@ int knapsack(int W, int weight[], int value[], int n, vector<vector<int>> &m)
 }
 int main() {
 
-	if (!ifstream("data.txt")) {
-		system("generator.exe 10000 100000");
+	if (!std::ifstream("data.txt")) {
+		system("generator.exe 20000 100000");
 	}
 
 	std::ifstream infile("data.txt", std::ios_base::in);
 
-
+	int n=0;
 
 	int items, capacity;
 	
 
-	infile >> items; 
-	items = 10000;
+	infile >> n; 
+	items = 5000;
 	infile >> capacity;
 
-	cout << "items: " << items << " capacity: " << capacity << endl;
+	std::cout << "items: " << n << " capacity: " << capacity << std::endl;
 
-
-	int *weights = new int[items];
-	int *values = new int[items];
 
 
 	int counter = 0;
-	while (infile >>weights[counter]>>values[counter] && counter < items)	{
-		counter++;
+
+	int READ=0;
+
+	int MAX_VALUE =0;
+
+	int *weights1 = new int[items];
+	int *weights2 = new int[items];
+	int *values1 = new int[items];
+	int *values2 = new int[items];
+
+
+	std::vector<std::vector<int> > m(std::vector<std::vector<int>>(items + 1, *new std::vector<int>(capacity + 1, 0)));  	// m[n+1][W+1]
+
+	std::vector<std::vector<int> > m2(std::vector<std::vector<int>>(items + 1, *new std::vector<int>(capacity + 1, 0)));  	// m[n+1][W+1]
+
+
+
+	int tmp = 0;
+
+	std::vector<std::vector<int> > *tmpvector = &m2;
+	int *tmpweights = weights1;
+
+
+	while (READ < (n/items)) {
+
+
+
+		if (tmpvector == &m2) {
+
+
+			while (counter < items) {  
+
+
+				infile >> weights1[counter] >> values1[counter];
+				counter++;
+			}
+
+		}
+
+		else {
+			while (counter < items) {
+				infile >> weights2[counter] >> values2[counter];
+				counter++;
+			}
+		}
+
+
+		if (READ == 0) {
+			MAX_VALUE = knapsack(capacity, weights1, values1, items, m);
+			tmpvector = &m;
+
+		}
+
+		if (READ > 0) {
+
+			if (tmpvector == &m) {
+				tmp = knapsack(capacity, weights2, values2, items, m2);
+				MAX_VALUE = MAX(MAX_VALUE, tmp);
+
+				if (MAX_VALUE == tmp) {
+					tmpvector = &m2;
+				}
+
+			}
+			else if (tmpvector == &m2) {
+				 tmp = knapsack(capacity, weights1, values1, items, m);
+				 MAX_VALUE = MAX(MAX_VALUE, tmp);
+
+				 if (MAX_VALUE == tmp) {
+					 tmpvector = &m;
+				 }
+
+			}
+
+		}
+
+		counter = 0;
+		READ++;
 	}
-
-	vector<vector<int> > m (vector<vector<int>>(items+1, *new vector<int>(capacity + 1, 0)));  	// m[n+1][W+1]
-
-
-	cout << "Max value: " << (knapsack( capacity, weights, values, items, m)) << endl;
-
 
 
 	int i = items;
 	int W = capacity;
 	int num = 0;
 
-	cout << "Weights: " << endl;
-	while (W>0 && i>1) {
-		if (m[i][W] != m[i - 1][W]) {
-			cout <<  weights[i-1] << " " << endl;
-			i--;
-			W = W - weights[i];
-			num++;
-			
-		}
-		else {
-			i--;
-		}
+	std::cout << "MAX Value: " << MAX_VALUE<< std::endl;
+
+		std::cout << "Weights: " << std::endl;
+		while (W > 0) {
+			if (tmpvector == &m) {
+				if (m[i][W] != m[i - 1][W]) {
+					std::cout << weights1[i - 1] << " " << std::endl;
+					i--;
+					W = W - weights1[i];
+					num++;
+
+				}
+				else {
+					i--;
+				}
+			}
+
+
+			else {
+
+				if (m2[i][W] != m2[i - 1][W]) {
+					std::cout << weights2[i - 1] << " " << std::endl;
+					i--;
+					W = W - weights2[i];
+					num++;
+
+				}
+				else {
+					i--;
+				}
+			}
 	}
 
-	cout << "Number of items: " << num;
+
+
+
+
+	std::cout << "Number of items used: " << num;
 
 	int exit;
 	std::cin >> exit;
