@@ -81,7 +81,7 @@ int main() {
 	// we start with pointing it to the second table
 
 	std::vector<std::vector<int> > *tmpvector = &m2;
-	int *tmpweights = weights1;
+
 
 
 
@@ -89,10 +89,14 @@ int main() {
 
 
 
+		// inputting the 5000 items into the weights and values array.
+		// depending on which vector is the pointer pointing to.
+
+
 		if (tmpvector == &m2) {
 
 
-			while (counter < items) {  	 // inputting the 5000 items into the weights and values array.
+			while (counter < items) {  	
 
 
 				infile >> weights1[counter] >> values1[counter];
@@ -109,11 +113,15 @@ int main() {
 		}
 
 
+		// FIrst time calclating the knapsack
 		if (READ == 0) {
 			MAX_VALUE = knapsack(capacity, weights1, values1, items, m);
 			tmpvector = &m;
 
 		}
+
+
+		// any other time
 
 		if (READ > 0) {
 
@@ -138,7 +146,9 @@ int main() {
 
 		}
 
-		counter = 0;
+		counter = 0;  // we have to reset this to start the count again
+		               //  Also because it is being used for indeces 
+
 		READ++;
 	}
 
