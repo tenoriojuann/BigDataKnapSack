@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 #include <map>
+#include <string>
 
 
 
@@ -38,7 +39,7 @@ int main() {
 		system("generator.exe 20000 100000");
 	}
 
-	std::ifstream infile("data.txt", std::ios_base::in);
+	std::ifstream infile("big.txt", std::ios_base::in);
 
 	int n=0;
 
@@ -49,7 +50,8 @@ int main() {
 	items = 5000;  // we will contemplate 5,000 digits at a time
 	infile >> capacity;	// capacity of the bag
 
-	std::cout << "items: " << n << " capacity: " << capacity << std::endl;
+	std::cout << "total size: " << n << " capacity: " << capacity << std::endl;
+	std::cout << "items at a time " << items << std::endl;
 
 
 
@@ -145,6 +147,16 @@ int main() {
 			}
 
 		}
+
+
+
+
+		std::cout << "\r" << (double)((READ+1)/((double)n/items))*100 << "% completed: ";
+
+		std::cout << std::string(((READ + 1) / ((double)n / items)) * 100, '|');
+
+		std::cout.flush();
+
 
 		counter = 0;  // we have to reset this to start the count again
 		               //  Also because it is being used for indeces 
