@@ -16,6 +16,7 @@
 *.rtf	 diff=astextplain
 *.RTF	 diff=astextplain
 
+*.txt
 
 *.h
 ReadMe.txt
